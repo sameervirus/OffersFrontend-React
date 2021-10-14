@@ -98,3 +98,9 @@
 .react-date-picker__wrapper {
   border: none !important;
 }
+.page-item {
+  cursor: pointer;
+}
+.page-item.disabled {
+  cursor: not-allowed;
+}

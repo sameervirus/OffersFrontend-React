@@ -1,22 +1,27 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import Button from "./Button";
 import Pagination from "../pagination/Pagination";
 let PageSize = 10;
-function Offers({ items, editItem, onEdit }) {
-  const [currentPage, setCurrentPage] = useState(1);
 
+function Offers({
+  items,
+  editItem,
+  onEdit,
+  addCurrentPage,
+  currentPage,
+  onDelete,
+  getQuoNo,
+}) {
   const currentTableData = useMemo(() => {
+    console.log(items);
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
     return items.slice(firstPageIndex, lastPageIndex);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [currentPage, items]);
 
   const onClickAdd = () => {
     editItem(true);
   };
-
-  const onClick = () => {};
 
   return (
     <div className="container">
@@ -52,16 +57,18 @@ function Offers({ items, editItem, onEdit }) {
                 <td>{o.description}</td>
                 <td>{o.work_type}</td>
                 <td>{o.quo_date}</td>
-                {o.quo_no.length > 0 && <td>{o.quo_no}</td>}
-                {o.quo_no.length === 0 && (
-                  <td>
-                    <Button
-                      classtitle="btn-outline-warning btn-sm"
-                      title="Generate"
-                      onClick={onClick}
-                    />
-                  </td>
-                )}
+                <td>
+                  {(o.quo_no !== null || o.quo_no !== "") && <>{o.quo_no}</>}
+                  {(o.quo_no === null || o.quo_no === "") && (
+                    <>
+                      <Button
+                        classtitle="btn-outline-warning btn-sm"
+                        title="Generate"
+                        onClick={() => getQuoNo(o.id)}
+                      />
+                    </>
+                  )}
+                </td>
                 <td>{o.quo_values}</td>
                 <td>{o.status}</td>
                 <td>
@@ -73,7 +80,7 @@ function Offers({ items, editItem, onEdit }) {
                   <Button
                     classtitle="btn-outline-danger btn-sm"
                     title="fa-trash-alt"
-                    onClick={onClick}
+                    onClick={() => onDelete(o.id)}
                   />
                 </td>
               </tr>
@@ -85,7 +92,7 @@ function Offers({ items, editItem, onEdit }) {
         currentPage={currentPage}
         totalCount={items.length}
         pageSize={PageSize}
-        onPageChange={(page) => setCurrentPage(page)}
+        onPageChange={(page) => addCurrentPage(page)}
       />
     </div>
   );

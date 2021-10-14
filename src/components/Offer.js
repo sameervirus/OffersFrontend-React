@@ -15,20 +15,22 @@ function Offer({ onEdit, editItem, selectedItem }) {
   const [status, setStatus] = useState("");
   const workScope = ["Fabrication", "Erection", "Fabrication & Erection"];
 
+  const [id, setId] = useState(null);
+
   useEffect(() => {
     if (selectedItem) {
-      setRec_date(selectedItem.rec_date);
+      setId(selectedItem.id);
+      setRec_date(new Date(selectedItem.rec_date));
       setClient(selectedItem.client);
       setProject_name(selectedItem.project_name);
       setDescription(selectedItem.description);
       setWork_type(selectedItem.work_type);
       setQuo_no(selectedItem.quo_no);
-      setQuo_date(selectedItem.quo_date);
+      if (selectedItem.quo_date) setQuo_date(new Date(selectedItem.quo_date));
       setQuo_values(selectedItem.quo_values);
       setStatus(selectedItem.status);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedItem]);
 
   const onRecDateChange = (e) => {
     setRec_date(e);
@@ -51,6 +53,7 @@ function Offer({ onEdit, editItem, selectedItem }) {
     }
 
     onEdit({
+      id,
       rec_date,
       client,
       project_name,
@@ -62,6 +65,7 @@ function Offer({ onEdit, editItem, selectedItem }) {
       status,
     });
 
+    setId(null);
     setRec_date("");
     setClient("");
     setProject_name("");
@@ -71,11 +75,10 @@ function Offer({ onEdit, editItem, selectedItem }) {
     setQuo_date("");
     setQuo_values("");
     setStatus("");
-
-    editItem(false);
   };
 
   const cancelEdit = () => {
+    setId(null);
     setRec_date("");
     setClient("");
     setProject_name("");
@@ -178,7 +181,7 @@ function Offer({ onEdit, editItem, selectedItem }) {
                   id="description"
                   name="description"
                   onChange={(e) => setDescription(e.target.value)}
-                  value={description}
+                  value={description ?? ""}
                 ></textarea>
               </div>
 
@@ -214,7 +217,7 @@ function Offer({ onEdit, editItem, selectedItem }) {
                   className="form-control"
                   id="quo_no"
                   name="quo_no"
-                  value={quo_no}
+                  value={quo_no ?? ""}
                   onChange={(e) => setQuo_no(e.target.value)}
                 />
               </div>
@@ -226,7 +229,7 @@ function Offer({ onEdit, editItem, selectedItem }) {
                 <DatePicker
                   className="form-control"
                   onChange={setQuo_date}
-                  value={quo_date}
+                  value={quo_date ?? ""}
                 />
               </div>
 
@@ -240,7 +243,7 @@ function Offer({ onEdit, editItem, selectedItem }) {
                   className="form-control"
                   id="quo_values"
                   name="quo_values"
-                  value={quo_values}
+                  value={quo_values ?? ""}
                   onChange={(e) => setQuo_values(e.target.value)}
                 />
               </div>
@@ -256,7 +259,7 @@ function Offer({ onEdit, editItem, selectedItem }) {
                   id="status"
                   name="status"
                   onChange={(e) => setStatus(e.target.value)}
-                  value={status}
+                  value={status ?? ""}
                 ></textarea>
               </div>
 
